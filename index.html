@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Block Game</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+</head>
+<body>
+    <a-scene>
+        <!-- Встановлення камери та курсора для взаємодії -->
+        <a-camera>
+            <a-cursor></a-cursor>
+        </a-camera>
+
+        <script>
+            AFRAME.registerComponent('tower-builder', {
+                init: function() {
+                    var sceneEl = document.querySelector('a-scene');
+                    var lastColor = "#4CC3D9";
+
+                    sceneEl.addEventListener('click', function(event) {
+                        var position = event.detail.intersection.point;
+
+                        var newColor = getRandomColor(lastColor);
+
+                        var newBox = document.createElement('a-box');
+                        newBox.setAttribute('position', position);
+                        newBox.setAttribute('color', newColor);
+                        newBox.setAttribute('class', 'clickable tower-builder');
+                        newBox.setAttribute('tower-builder', '');
+
+                        sceneEl.appendChild(newBox);
+
+                        lastColor = newColor;
+                    });
+                }
+            });
+
+            function getRandomColor(lastColor) {
+                var color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16).padEnd(6, '0');
+                while (color === lastColor) {
+                    color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16).padEnd(6, '0');
+                }
+                return color;
+            }
+        </script>
+
+        <!-- Базовий куб, який відображається на сцені -->
+        <a-box position="0 0.5 -5" color="#4CC3D9" id="tower-block" class="clickable" tower-builder></a-box>
+    </a-scene>
+</body>
+</html>
